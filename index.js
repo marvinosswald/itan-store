@@ -41,3 +41,25 @@ exports.resetUsed = function(cb){
     });
   })
 };
+exports.newStore = function(json,key,cb){
+  var self = this;
+  var store = {};
+  each(json)
+  .on('item', function(key, value, next) {
+    store[key] = {
+      val: value,
+      used: false
+    }
+    next();
+  })
+  .on('error', function(err) {
+    if (cb) {
+      cb(err);
+    }else{
+      console.error(err);
+    };
+  })
+  .on('end', function(){
+    util.setStore(store,key,cb);
+  });
+};

@@ -94,7 +94,7 @@ program
               }
             }
           }, function (err, res) {
-            util.newStore(json,res.password,function(err){
+            itan.newStore(json,res.password,function(err){
               if (err) throw err
               console.log('List stored');
             });
