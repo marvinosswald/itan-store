@@ -4,17 +4,22 @@ var each = require('each');
 
 exports.getTan = function(id,key,cb){
   util.getStore(key,function(json){
-    if(json[id]){
-      if(json[id].used){
-        cb(false);
+    if(json){
+      if(json[id]){
+        if(json[id].used){
+          cb(false,'Tan already used');
+        }else{
+          json[id].used = true;
+          util.updateStore(id,json[id],key);
+          cb(json[id].val);
+        }
       }else{
-        json[id].used = true;
-        util.updateStore(id,json[id],key);
-        cb(json[id].val);
+        cb(false,'ID Unknown');
       }
     }else{
-      console.log('ID unknown');
+      cb(false,'Wrong password');
     }
+
   });
 };
 exports.resetUsed = function(cb){

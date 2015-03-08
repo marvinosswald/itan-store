@@ -1,6 +1,6 @@
 {
   "name": "iTan",
-  "version": "1.0.0",
+  "version": "0.1.0",
   "description": "encrypt your iTan list",
   "main": "index.js",
   "scripts": {
@@ -28,6 +28,8 @@
     "config": "^1.12.0",
     "crypto-js": "^3.1.2-5",
     "each": "^0.5.0",
-    "prompt": "^0.2.14"
+    "mkdirp": "^0.5.0",
+    "prompt": "^0.2.14",
+    "pwuid": "^1.0.2"
   }
 }

@@ -1,6 +1,9 @@
 {
   "Store":{
-    "path": "~/.itan-store/",
+    "path": "home",
     "file": "store"
+  },
+  "itan":{
+    "mode": "default"
   }
 }

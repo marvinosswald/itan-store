@@ -1,9 +1,11 @@
+#!/usr/bin/env node
 var program = require('commander');
 var fs = require('fs');
 var util = require('./lib/util.js');
 var itan = require('./');
 var chalk = require('chalk');
 var prompt = require('prompt');
+var config = require('config').get('itan');
 
 var schema = {
     properties: {
@@ -26,26 +28,38 @@ program
   .command('*')
   .description('input iTan List id to get related TAN')
   .action(function(id, options){
-    prompt.get(schema, function (err, res) {
-      itan.getTan(id,res.password,function(tan){
-        if(tan){
-          console.log(chalk.white(id) + ': ' + chalk.bgBlue.white(tan));
-        }else{
-          console.log(chalk.bgRed.white('Tan already used'));
-        }
-      });
-    });
+    if(util.checkStore()){
+      if(id){
+        prompt.get(schema, function (err, res) {
+          itan.getTan(id,res.password,function(tan,msg){
+            if(tan){
+              console.log(chalk.white(id) + ': ' + chalk.bgBlue.white(tan));
+            }else{
+              console.log(chalk.bgRed.white(msg));
+            }
+          });
+        });
+      }else{
+        console.log(chalk.red('Please provide id'));
+      }
+    }else{
+      console.log(chalk.red('No Store found'));
+    }
   });
 program
   .command('reset')
   .action(function(){
-    prompt.get(schema, function (err, res) {
-      itan.resetUsed(res.password,function(err){
-        if (err) throw err;
-        console.log(chalk.yellow('Used attribute got reset.'));
+    if(util.checkStore()){
+      prompt.get(schema, function (err, res) {
+        itan.resetUsed(res.password,function(err){
+          if (err) throw err;
+          console.log(chalk.yellow('Used attribute got reset.'));
+        });
       });
-    });
-  })
+    }else{
+      console.log(chalk.red('No Store found'));
+    }
+  });
 // Add ITan List as a JSON File
 program
   .command('addlist <file ...>')
