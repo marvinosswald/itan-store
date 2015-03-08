@@ -22,23 +22,27 @@ exports.getTan = function(id,key,cb){
 
   });
 };
-exports.resetUsed = function(cb){
-  util.getStore(function(json){
-    each(json)
-    .on('item', function(key, value, next) {
-      json[key].used = false;
-      next();
-    })
-    .on('error', function(err) {
-      if (cb) {
-        cb(err);
-      }else{
-        console.error(err);
-      };
-    })
-    .on('end', function(){
-      util.setStore(json,cb);
-    });
+exports.resetUsed = function(key,cb){
+  util.getStore(key,function(json){
+    if(json){
+      each(json)
+      .on('item', function(key, value, next) {
+        json[key].used = false;
+        next();
+      })
+      .on('error', function(err) {
+        if (cb) {
+          cb(err);
+        }else{
+          console.error(err);
+        };
+      })
+      .on('end', function(){
+        util.setStore(json,key,cb);
+      });
+    }else{
+      cb('Password wrong');
+    }
   })
 };
 exports.newStore = function(json,key,cb){

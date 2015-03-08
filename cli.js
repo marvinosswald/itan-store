@@ -52,8 +52,11 @@ program
     if(util.checkStore()){
       prompt.get(schema, function (err, res) {
         itan.resetUsed(res.password,function(err){
-          if (err) throw err;
-          console.log(chalk.yellow('Used attribute got reset.'));
+          if (err) {
+            console.log(chalk.bgRed.white(err));
+          }else{
+            console.log(chalk.yellow('Used attribute got reset.'));
+          }
         });
       });
     }else{
