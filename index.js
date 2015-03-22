@@ -50,6 +50,9 @@ exports.newStore = function(json,key,cb){
   var store = {};
   each(json)
   .on('item', function(key, value, next) {
+    if (typeof key == 'string'){
+      key = parseInt(key.split('_')[1]);
+    }
     store[key] = {
       val: value,
       used: false

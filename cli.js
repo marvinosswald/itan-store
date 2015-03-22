@@ -48,6 +48,7 @@ program
   });
 program
   .command('reset')
+  .description('reset used value of the whole list')
   .action(function(){
     if(util.checkStore()){
       prompt.get(schema, function (err, res) {
@@ -65,44 +66,103 @@ program
   });
 // Add ITan List as a JSON File
 program
-  .command('addlist <file ...>')
-  .action(function (file) {
-    if (file) {
-      console.log('Add List: %s', file);
-      fs.readFile(file, function (err, data) {
-        if (err) throw err;
-        var json = JSON.parse(data);
-        prompt.get({
-            properties: {
-              password: {
-                description: 'Enter your password',
-                pattern: /(?=(.*[0-9])+|(.*[ !\"#$%&'()*+,\-.\/:;<=>?@\[\\\]^_`{|}~])+)(?=(.*[a-z])+)(?=(.*[A-Z])+)[0-9a-zA-Z !\"#$%&'()*+,\-.\/:;<=>?@\[\\\]^_`{|}~]{8,}/,
-                message: 'Key must have at least 8 char, one digit or special char, lower and upper case letters',
-                hidden: true,
-                required: true
-              },
-              pw_again: {
-                description: 'Repeat your password',
-                pattern: /(?=(.*[0-9])+|(.*[ !\"#$%&'()*+,\-.\/:;<=>?@\[\\\]^_`{|}~])+)(?=(.*[a-z])+)(?=(.*[A-Z])+)[0-9a-zA-Z !\"#$%&'()*+,\-.\/:;<=>?@\[\\\]^_`{|}~]{8,}/,
-                message: 'Key must have at least 8 char, one digit or special char, lower and upper case letters',
-                hidden: true,
-                required: true,
-                conform: function (value) {
-                  var pw = prompt.history('password').value;
-                  if (pw === value){
-                    return true;
+  .command('addlist')
+  .description('add a Tan List to iTan')
+  .option('-f --file <file>', 'Import json file')
+  .option('-a --assistent', 'An Assistent to input you TAN List')
+  .action(function (options) {
+    if (options.assistent) {
+      prompt.get([
+        {
+          name: 'listsize',
+          description: 'List length',
+          default: 100,
+          type: 'number'
+        }
+      ],function(err,res){
+        console.log(res);
+        var assistent = [];
+        for (var i = 0; i < res.listsize; i++){
+          var schema = {
+            name: 'tan_' + i,
+            description: 'TAN ' + i,
+            required:true,
+            type: 'number'
+          }
+          assistent.push(schema);
+        }
+        console.log(assistent);
+        prompt.get(assistent,function(err,list){
+          prompt.get({
+              properties: {
+                password: {
+                  description: 'Enter your password',
+                  pattern: /(?=(.*[0-9])+|(.*[ !\"#$%&'()*+,\-.\/:;<=>?@\[\\\]^_`{|}~])+)(?=(.*[a-z])+)(?=(.*[A-Z])+)[0-9a-zA-Z !\"#$%&'()*+,\-.\/:;<=>?@\[\\\]^_`{|}~]{8,}/,
+                  message: 'Key must have at least 8 char, one digit or special char, lower and upper case letters',
+                  hidden: true,
+                  required: true
+                },
+                pw_again: {
+                  description: 'Repeat your password',
+                  pattern: /(?=(.*[0-9])+|(.*[ !\"#$%&'()*+,\-.\/:;<=>?@\[\\\]^_`{|}~])+)(?=(.*[a-z])+)(?=(.*[A-Z])+)[0-9a-zA-Z !\"#$%&'()*+,\-.\/:;<=>?@\[\\\]^_`{|}~]{8,}/,
+                  message: 'Key must have at least 8 char, one digit or special char, lower and upper case letters',
+                  hidden: true,
+                  required: true,
+                  conform: function (value) {
+                    var pw = prompt.history('password').value;
+                    if (pw === value){
+                      return true;
+                    }
+                    return false;
                   }
-                  return false;
                 }
               }
-            }
-          }, function (err, res) {
-            itan.newStore(json,res.password,function(err){
-              if (err) throw err
-              console.log('List stored');
-            });
+            }, function (err, res) {
+              itan.newStore(list,res.password,function(err){
+                if (err) throw err
+                console.log('List stored');
+              });
+          });
+        })
+      })
+    }else if (program.file){
+      if (file) {
+        console.log('Add List: %s', file);
+        fs.readFile(file, function (err, data) {
+          if (err) throw err;
+          var json = JSON.parse(data);
+          prompt.get({
+              properties: {
+                password: {
+                  description: 'Enter your password',
+                  pattern: /(?=(.*[0-9])+|(.*[ !\"#$%&'()*+,\-.\/:;<=>?@\[\\\]^_`{|}~])+)(?=(.*[a-z])+)(?=(.*[A-Z])+)[0-9a-zA-Z !\"#$%&'()*+,\-.\/:;<=>?@\[\\\]^_`{|}~]{8,}/,
+                  message: 'Key must have at least 8 char, one digit or special char, lower and upper case letters',
+                  hidden: true,
+                  required: true
+                },
+                pw_again: {
+                  description: 'Repeat your password',
+                  pattern: /(?=(.*[0-9])+|(.*[ !\"#$%&'()*+,\-.\/:;<=>?@\[\\\]^_`{|}~])+)(?=(.*[a-z])+)(?=(.*[A-Z])+)[0-9a-zA-Z !\"#$%&'()*+,\-.\/:;<=>?@\[\\\]^_`{|}~]{8,}/,
+                  message: 'Key must have at least 8 char, one digit or special char, lower and upper case letters',
+                  hidden: true,
+                  required: true,
+                  conform: function (value) {
+                    var pw = prompt.history('password').value;
+                    if (pw === value){
+                      return true;
+                    }
+                    return false;
+                  }
+                }
+              }
+            }, function (err, res) {
+              itan.newStore(json,res.password,function(err){
+                if (err) throw err
+                console.log('List stored');
+              });
+          });
         });
-      });
+      }
     }
   });
 
