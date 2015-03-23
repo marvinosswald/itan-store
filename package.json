@@ -1,6 +1,6 @@
 {
   "name": "itan",
-  "version": "0.1.2",
+  "version": "0.1.3",
   "description": "encrypt your iTan list",
   "main": "index.js",
   "bin": {
