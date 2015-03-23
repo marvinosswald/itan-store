@@ -26,7 +26,7 @@ var schema = {
 prompt.message = "iTan Store".rainbow;
 prompt.delimiter = " >> ".yellow;
 prompt.start();
-program.version('1.0.0');
+program.version(pkg.version);
 
 program
   .usage('[options] <id>')

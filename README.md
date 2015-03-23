@@ -1,5 +1,7 @@
 # iTan
 
+![](readme_media/get_tan.gif)
+
 iTan is a cli app to manage your iTan List fully encrypted.
 
   - Add List as JSON File or with assistent
