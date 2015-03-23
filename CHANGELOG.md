@@ -1,5 +1,9 @@
 #Changelog
 
+## 0.1.5
+
+- Got rid of unnecessary lines of code in cli.js
+
 ## 0.1.4
 
 - Fixed version output

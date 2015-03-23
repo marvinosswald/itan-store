@@ -2,8 +2,5 @@
   "Store":{
     "path": "home",
     "file": "store"
-  },
-  "itan":{
-    "mode": "default"
   }
 }

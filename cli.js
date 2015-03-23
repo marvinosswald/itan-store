@@ -5,7 +5,6 @@ var util = require('./lib/util.js');
 var itan = require('./');
 var chalk = require('chalk');
 var prompt = require('prompt');
-var config = require('config').get('itan');
 var updateNotifier = require('update-notifier');
 
 var pkg = require('./package.json');
